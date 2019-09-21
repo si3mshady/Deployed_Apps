@@ -1,0 +1,26 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t si3mshady/pd .
+
+script:
+  - docker run si3mshady/pd cat web_server.py | grep 5000
+  - docker run si3mshady/pd echo "Successful test Elliott!"
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "pig_dice"
+  env: "PigDice-env"
+  bucket_name: "elasticbeanstalk-us-east-1-952151691101"
+  bucket_path: "pig_dice"
+  on:
+    branch: master
+  access_key_id:
+    secure: "$AWS_ACCESS_KEY"
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
+
+
