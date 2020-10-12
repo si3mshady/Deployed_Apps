@@ -1,0 +1,26 @@
+
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t si3mshady/journal .
+  - docker run -d -p 27017:27017  -v ~/data:/data/db mongo
+
+
+
+language: generic
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"
+  app: "myJournal"
+  env: "myJournal-env"
+  bucket_name: "deployment-sandbox-nodejs"
+  bucket_path: "myjournal"
+  on:
+    branch: master
+
+  access_key_id:
+    secure: "$AWS_ACCESS_KEY"
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
